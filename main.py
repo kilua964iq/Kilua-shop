@@ -186,10 +186,26 @@ async def callback_handler(event: events.CallbackQuery.Event) -> None:
         await event.edit("اختر القطاع المطلوب 👇", buttons=MAIN_BUTTONS)
         return
 
-    if data == "accounts":
+        if data == "accounts":
         user_states[uid] = "accounts"
-        await event.edit("🏭 **مصنع الجيوش**\n\nقريباً ربط الحسابات والأتمتة هنا... 🔧", buttons=BACK_BUTTON)
+        # هذه الأزرار هي حجر الأساس للأنظمة الـ 7 في هذا القطاع
+        buttons = [
+            [Button.inline("🤖 نظام التوليد الآلي", b"factory_gen"), 
+             Button.inline("📂 إدارة الجيوش", b"army_control")],
+            [Button.inline("⏳ غرفة التخمير (48h)", b"incubation"), 
+             Button.inline("🎭 محرك الهوية", b"identity_engine")],
+            [Button.inline("🧹 تنظيف وتصفية", b"army_clean"),
+             Button.inline("🔙 رجوع للقائمة الرئيسية", b"main_menu")]
+        ]
+        await event.edit(
+            "🏭 **قطاع المصنع والحسابات**\n\n"
+            "مرحباً بك في وحدة الإنشاء والأتمتة.\n"
+            "الأنظمة المتاحة: 7 | الجداول الفعالة: 8\n\n"
+            "اختر النظام المطلوب للبدء بالتنفيذ:", 
+            buttons=buttons
+        )
         return
+
 
     if data == "tactical":
         user_states[uid] = "tactical"
