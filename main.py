@@ -123,11 +123,24 @@ async def callback_handler(event):
         return
 
     # الكود الافتراضي للأزرار إذا لم يوجد كود ديناميكي
-    if data == "accounts":
+        if data == "accounts":
         user_states[uid] = "accounts"
-        btns = [[Button.inline("⚙️ إضافة/تعديل كود", b"edit_mode")], [Button.inline("🔙 رجوع", b"main_menu")]]
-        await event.edit("🏭 **مصنع الجيوش**\nقيد التطوير أو أضف كوداً الآن:", buttons=btns)
-    
+        # هذه القائمة هي اللي راح تظهر لك الـ 150 زر بالتدريج
+        btns = [
+            [Button.inline("🤖 نظام التوليد الآلي", b"auto_gen"), 
+             Button.inline("📂 إدارة الجيوش", b"army_view")],
+            [Button.inline("⏳ غرفة التخمير", b"incubation"), 
+             Button.inline("🎭 محرك الهوية", b"identity_engine")],
+            [Button.inline("⚙️ إضافة/تعديل كود", b"edit_mode")],
+            [Button.inline("🔙 رجوع للقائمة الرئيسية", b"main_menu")]
+        ]
+        await event.edit(
+            "🏭 **قطاع مصنع الجيوش والحسابات**\n\n"
+            "مرحباً بك في وحدة التحكم.\n"
+            "الأنظمة: 7 | الجداول: 8\n\n"
+            "اختر النظام المطلوب أو اضغط 'تعديل كود' لبرمجة زر معين:", 
+            buttons=btns 
+        (
     elif data == "edit_mode":
         editing_button[uid] = "awaiting_id"
         await event.respond("🛡️ **محرر الأكواد**\nأرسل ID الزر (مثلاً `auto_gen`):")
