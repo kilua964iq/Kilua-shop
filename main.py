@@ -1,6 +1,7 @@
 """
 Telegram Bot - Telethon + Supabase + OpenAI (GPT-4o-Mini)
 مستضاف على Railway | ردود بلهجة عراقية احترافية
+المنظومة المتكاملة - الإصدار المحدث
 """
 
 import os
@@ -48,16 +49,20 @@ STATES = {
     "tactical":    "🚀 الهجوم التكتيكي",
     "ai_analysis": "🧠 مختبر AI",
     "protection":  "🛡️ درع الحماية",
+    "live_stats":  "📊 الإحصائيات الحية",
+    "settings":    "⚙️ الإعدادات",
 }
 
 # ─────────────────────────────────────────────
-#  الأزرار الرئيسية
+#  الأزرار الرئيسية (الواجهة السداسية الكاملة)
 # ─────────────────────────────────────────────
 MAIN_BUTTONS = [
     [Button.inline("🏭 مصنع الجيوش",    b"accounts"),
      Button.inline("🚀 الهجوم التكتيكي", b"tactical")],
     [Button.inline("🧠 مختبر AI",     b"ai_analysis"),
      Button.inline("🛡️ درع الحماية",      b"protection")],
+    [Button.inline("📊 الإحصائيات الحية", b"live_stats"),
+     Button.inline("⚙️ الإعدادات",      b"settings")],
 ]
 
 BACK_BUTTON = [[Button.inline("🔙 رجوع للقائمة الرئيسية", b"main_menu")]]
@@ -120,7 +125,7 @@ async def ask_ai(user_id: int, question: str) -> str:
                 json={
                     "model": "gpt-4o-mini",
                     "messages": [
-                        {"role": "system", "content": "أنت مساعد ذكي محترف. تجاوب دائماً بلهجة عراقية احترافية وودية. كن دقيقاً ومفيداً."},
+                        {"role": "system", "content": "أنت مساعد ذكي محترف في المنظومة. تجاوب دائماً بلهجة عراقية احترافية وودية. كن دقيقاً ومفيداً."},
                         {"role": "user", "content": question}
                     ],
                 }
@@ -129,7 +134,7 @@ async def ask_ai(user_id: int, question: str) -> str:
             return data["choices"][0]["message"]["content"].strip()
     except Exception as exc:
         log.error("OpenAI error for user %s: %s", user_id, exc)
-        return "🔴 ما قدرت أوصل للذكاء الاصطناعي حالياً، حاول بعد شوية يا قائد."
+        return "🔴 ما قدرت أوصل للعقل المركزي حالياً، حاول بعد شوية يا قائد."
 
 # ─────────────────────────────────────────────
 #  مساعد: بناء اسم المستخدم
@@ -149,9 +154,10 @@ async def cmd_start(event: events.NewMessage.Event) -> None:
     db_upsert_user(uid, sender.username, name)
     user_states[uid] = None
     welcome = (
-        f"أهلاً وسهلاً بيك يا **{name}** 👋\n\n"
-        "أنا بوتك الذكي (مدعوم بـ GPT-4o) جاهز يخدمك على طول 🚀\n"
-        "اختار القسم اللي تريده من الأزرار أدناه:"
+        f"⚡ **أهلاً بك يا قائد {name} في المنظومة** ⚡\n\n"
+        "الحالة: مستقرة ✅\n"
+        "الاتصال: سوبابيز + ذكاء اصطناعي ✅\n\n"
+        "اختر القطاع المطلوب من الأزرار أدناه:"
     )
     await event.respond(welcome, buttons=MAIN_BUTTONS)
     raise events.StopPropagation
@@ -163,9 +169,9 @@ async def cmd_status(event: events.NewMessage.Event) -> None:
     stats = db_get_user_stats(uid)
     state_label = STATES.get(state, "بدون قسم محدد") if state else "بدون قسم محدد"
     text = (
-        "📊 **حالتك الحالية:**\n\n"
-        f"• القسم: `{state_label}`\n"
-        f"• مجموع استفساراتك للـ AI: `{stats['total_queries']}`\n"
+        "📊 **إحصائيات المنظومة:**\n\n"
+        f"• القسم الحالي: `{state_label}`\n"
+        f"• مجموع العمليات: `{stats['total_queries']}`\n"
     )
     await event.respond(text, buttons=BACK_BUTTON)
     raise events.StopPropagation
@@ -177,7 +183,7 @@ async def callback_handler(event: events.CallbackQuery.Event) -> None:
 
     if data == "main_menu":
         user_states[uid] = None
-        await event.edit("اختار القسم اللي تريده 👇", buttons=MAIN_BUTTONS)
+        await event.edit("اختر القطاع المطلوب 👇", buttons=MAIN_BUTTONS)
         return
 
     if data == "accounts":
@@ -192,12 +198,23 @@ async def callback_handler(event: events.CallbackQuery.Event) -> None:
 
     if data == "ai_analysis":
         user_states[uid] = "ai_analysis"
-        await event.edit("🧠 **مختبر AI**\n\nأرسل فكرتك الآن وسيجيبك GPT-4o فوراً..", buttons=BACK_BUTTON)
+        await event.edit("🧠 **مختبر AI**\n\nأرسل فكرتك الآن وسيجيبك العقل المركزي فوراً..", buttons=BACK_BUTTON)
         return
 
     if data == "protection":
         user_states[uid] = "protection"
-        await event.edit("🛡️ **درع الحماية**\n\nنظام حماية البيانات مفعّل... 🛡️", buttons=BACK_BUTTON)
+        await event.edit("🛡️ **درع الحماية**\n\nنظام حماية البيانات مفعّل وأمن المنظومة مستقر... 🛡️", buttons=BACK_BUTTON)
+        return
+
+    if data == "live_stats":
+        user_states[uid] = "live_stats"
+        stats = db_get_user_stats(uid)
+        await event.edit(f"📊 **الإحصائيات الحية**\n\nإجمالي عملياتك: `{stats['total_queries']}`\nسيتم إضافة المزيد من البيانات قريباً.", buttons=BACK_BUTTON)
+        return
+
+    if data == "settings":
+        user_states[uid] = "settings"
+        await event.edit("⚙️ **الإعدادات**\n\nتخصيص المنظومة وتعديل المفاتيح متاح للمشرفين فقط.", buttons=BACK_BUTTON)
         return
 
 @bot.on(events.NewMessage(func=lambda e: e.is_private and not e.via_bot_id))
@@ -208,20 +225,20 @@ async def message_handler(event: events.NewMessage.Event) -> None:
 
     state = user_states.get(uid)
     if state == "ai_analysis":
-        thinking_msg = await event.respond("⏳ جاري التحليل بذكاء OpenAI...")
+        thinking_msg = await event.respond("⏳ جاري جلب الرد من العقل المركزي...")
         answer = await ask_ai(uid, text)
         db_log_message(uid, "ai_analysis", text, answer)
         await thinking_msg.delete()
-        await event.respond(f"🤖 **الجواب:**\n\n{answer}", buttons=BACK_BUTTON)
+        await event.respond(f"🤖 **النتيجة من مختبر AI:**\n\n{answer}", buttons=BACK_BUTTON)
         return
 
     if state is None:
-        await event.respond("اختار قسم من القائمة أول 👇", buttons=MAIN_BUTTONS)
+        await event.respond("اختر قطاعاً من المنظومة للبدء 👇", buttons=MAIN_BUTTONS)
     else:
-        await event.respond(f"أنت داخل قسم **{STATES.get(state)}**.\nللذكاء الاصطناعي، انتقل لـ 🧠 مختبر AI.", buttons=BACK_BUTTON)
+        await event.respond(f"أنت داخل قطاع **{STATES.get(state)}**.\nللذكاء الاصطناعي، انتقل لـ 🧠 مختبر AI.", buttons=BACK_BUTTON)
 
 async def main() -> None:
-    log.info("🚀 البوت يشتغل بـ GPT-4o...")
+    log.info("🚀 المنظومة تعمل بـ GPT-4o...")
     await bot.start(bot_token=BOT_TOKEN)
     await bot.run_until_disconnected()
 
