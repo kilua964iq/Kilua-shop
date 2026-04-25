@@ -22,7 +22,19 @@ from telethon.errors import FloodWaitError
 from supabase import create_client, Client
 import httpx
 import aiohttp
+# ============================================
+# تهيئة العميل
+# ============================================
 
+bot = TelegramClient("mustafa_empire_session", API_ID, API_HASH)
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+
+# ✅✅✅ الحل السحري ✅✅✅
+@bot.on(events.NewMessage(pattern='/start'))
+async def direct_emergency_start(event):
+    await event.respond("✅ البوت يعمل بشكل طبيعي!")
+
+# باقي الكود بعدها عادي
 # ============================================
 # الإعدادات الأساسية
 # ============================================
