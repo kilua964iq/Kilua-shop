@@ -1,40 +1,27 @@
-# متطلبات مشروع Mustafa Shop - بوت التليجرام المتقدم
+# Mustafa Shop - Digital Empire Requirements
+# Python 3.11+
 
-# الأساسيات - Telethon للبوت
+# Core
 telethon>=1.34.0
-
-# Supabase للقاعدة البيانات
 supabase>=2.0.0
-
-# HTTP client للطلبات
 httpx>=0.25.0
 aiohttp>=3.9.0
 
-# للطلبات المتزامنة
-requests>=2.31.0
+# Database & Cache
+asyncpg>=0.29.0
+redis>=5.0.0
 
-# التعامل مع JSON والبيانات
+# Security & Encryption
+cryptography>=41.0.0
 python-dotenv>=1.0.0
 
-# تشفير وفك تشفير آمن
-cryptography>=41.0.0
+# AI & APIs
+openai>=1.0.0
+google-generativeai>=0.3.0
 
-# معالجة الصور والكابتشا (لحل الكابتشا لاحقاً)
+# Utilities
+beautifulsoup4>=4.12.0
+lxml>=4.9.0
 Pillow>=10.0.0
-
-# أدوات إضافية
-psutil>=5.9.0  # لمراقبة استخدام النظام
-colorama>=0.4.6  # للألوان في الـ logs
-
-# في حال استخدام PostgreSQL مباشرة (اختياري)
-# asyncpg>=0.29.0
-
-# في حال استخدام Redis للتخزين المؤقت (اختياري)
-# redis>=5.0.0
-
-# أدوات مساعدة للـ AI والتحليل
-beautifulsoup4>=4.12.0  # لتحليل HTML
-lxml>=4.9.0  # معالج HTML أسرع
-
-# للتعامل مع الـ proxy المتقدم
-aiohttp-socks>=0.8.0  # دعم SOCKS proxy
+psutil>=5.9.0
+colorama>=0.4.6
