@@ -1,11 +1,15 @@
 # Mustafa Shop - Digital Empire Requirements
-# Python 3.11+
 
 # Core
 telethon>=1.34.0
 supabase>=2.0.0
 httpx>=0.25.0
 aiohttp>=3.9.0
+
+# Proxy support (لحل مشكلة socks)
+aiohttp-socks>=0.8.0
+python-socks>=2.4.0
+pysocks>=1.7.1
 
 # Database & Cache
 asyncpg>=0.29.0
